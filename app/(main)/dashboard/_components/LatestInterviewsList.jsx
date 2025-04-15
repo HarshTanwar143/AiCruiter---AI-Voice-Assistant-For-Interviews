@@ -1,6 +1,7 @@
 "use client"
 import { Button } from '@/components/ui/button';
-import { Video } from 'lucide-react';
+import { Plus, Video } from 'lucide-react';
+import Link from 'next/link';
 import React, { useState } from 'react'
 
 function LatestInterviewsList() {
@@ -15,7 +16,9 @@ function LatestInterviewsList() {
                 <div className=' p-5 flex flex-col gap-3 items-center mt-5 bg-white rounded-xl'>
                     <Video className=' h-10 w-10 text-primary' />
                     <h2>You don't have any interview created!</h2>
-                    <Button className=' cursor-pointer'>+ Create New Interview</Button>
+                    <Link href={'/dashboard/create-interview'}>
+                        <Button className=' cursor-pointer'><Plus/> Create New Interview</Button>                
+                    </Link>
                 </div>
             }
         </div>
