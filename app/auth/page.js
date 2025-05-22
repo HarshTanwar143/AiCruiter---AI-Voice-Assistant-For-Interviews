@@ -7,10 +7,14 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/services/supabaseClient';
 
 const SignIn = () => {
+
     // Used to Sign in with Google
     const signInWithGoogle = async() => {
         const {error} = await supabase.auth.signInWithOAuth({
-            provider: 'google'
+            provider: 'google',
+                options: {
+                    redirectTo: 'http://localhost:3000/dashboard'
+                }
         });
 
         if(error){
@@ -20,7 +24,7 @@ const SignIn = () => {
 
 
   return (
-    <div className=' flex flex-col items-center justify-center h-screen'>
+    <div className=' bg-[#DDE9FF] flex flex-col items-center justify-center h-screen'>
         <Image 
             src={logo}
             height={200}
@@ -28,7 +32,7 @@ const SignIn = () => {
             alt="logo"
         />
         
-        <div className=' flex flex-col items-center border rounded-2xl shadow-lg p-10 mt-5'>
+        <div className=' bg-white flex flex-col items-center border rounded-2xl shadow-lg p-10 mt-5'>
             <Image 
                 src={login}
                 height={300}

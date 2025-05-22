@@ -13,7 +13,7 @@ function CreateOptions() {
                 <p className=' text-gray-500 font-semibold'>Create AI interviews and schedule them with candidates</p>
             </Link>
 
-            <div className=' w-full bg-white p-5 rounded-xl'>
+            <div className=' w-full bg-white p-5 rounded-xl hover:scale-95 duration-400'>
                 <div className=' p-2 bg-blue-200 w-fit rounded-md'>
                     <PhoneCallIcon className=' text-primary ' />
                 </div>

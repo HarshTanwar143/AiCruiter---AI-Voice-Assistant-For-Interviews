@@ -38,7 +38,7 @@ function CreateInterview() {
                 <FormContainer onHandleInputChange={onHandleInputChange} GoToNext={()=>HandleNext()}/> :
                 (
                     step === 2 ? 
-                    <QuestionList /> : 
+                    <QuestionList formData={formData} /> : 
                     null
                 )
             }
