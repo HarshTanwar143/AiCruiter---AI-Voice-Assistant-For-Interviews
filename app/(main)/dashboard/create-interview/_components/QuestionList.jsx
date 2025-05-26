@@ -9,7 +9,7 @@ import { supabase } from '@/services/supabaseClient';
 import { useUser } from '@/app/provider';
 import { v4 as uuidv4 } from 'uuid';
 
-function QuestionList({formData}) {
+function QuestionList({formData, onCreateLink}) {
     const [loading, setLoading] = useState(true);
     const [saveLoading, setSaveLoading] = useState(false);
     const [questionList, setQuestionList] = useState();
@@ -58,6 +58,7 @@ function QuestionList({formData}) {
 
         console.log('data : ', data);
         setSaveLoading(false);
+        onCreateLink(interviewId);
     }
 
 
@@ -75,7 +76,7 @@ function QuestionList({formData}) {
                 <div className=' mt-5 '>
                     <Button onClick={()=>onFinish()} className=' w-full mt-2 cursor-pointer' disabled={saveLoading}>
                         {saveLoading && <Loader2Icon className=' animate-spin mr-2' />}
-                        {saveLoading ? 'Saving...' : 'Save Interview'}
+                        {saveLoading ? 'Creating...' : 'Creating Interview Link & Finish'}
                     </Button>
                     {
                         questionList?.length > 0 && <QuestionListContainer questionList={questionList}/>
