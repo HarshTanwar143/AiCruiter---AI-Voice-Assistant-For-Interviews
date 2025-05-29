@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'
-import { ArrowLeft, Clock, Copy, List, Mail, Plus, Slack, MessageCircleMore } from 'lucide-react';
+import { ArrowLeft, Clock, Copy, List, Mail, Plus, Slack, MessageCircleMore, ListCheck } from 'lucide-react';
 import Image from 'next/image'
 import Link from 'next/link';
 import React from 'react'
@@ -66,8 +66,8 @@ function InterviewLink({interview_Id, formData}) {
                 <Link href={'/dashboard'}>
                     <Button className=' cursor-pointer' variant={'outline'}><ArrowLeft /> Back to Dashboard</Button>
                 </Link>
-                <Link href={'/dashboard/create-interview'}>
-                    <Button className=' cursor-pointer' ><Plus /> Create New Interview</Button>
+                <Link href={'/all-interview'}>
+                    <Button className=' cursor-pointer' ><ListCheck /> All Interviews</Button>
                 </Link>
             </div>
         </div>

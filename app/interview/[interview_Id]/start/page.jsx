@@ -33,7 +33,6 @@ function StartInterview() {
 
     useEffect(() => {
         interviewInfo && startCall();
-        console.log('this is the interview Id : ', interview_Id);
     }, [interviewInfo]);
 
     const startCall = async() => {
@@ -42,7 +41,6 @@ function StartInterview() {
             questionList += item?.question + (index < interviewInfo.interviewData.questionList.length - 1 ? ', ' : '');
         });
 
-        // console.log('questionList', questionList);
 
         const assistantOptions = {
             name: "AI Recruiter",
@@ -105,55 +103,38 @@ function StartInterview() {
 
     const stopInterview = () => {
         try {
-            setLoading(true);
             clearInterval(intervalId);
             
-            console.log("Stopping interview...");
             // Stop the vapi call
+            toast("Interview Ended... Please Wait...");
             vapi.stop();
-
-            console.log('inside stop interview before generate feedback');
             GenerateFeedback();
-            setLoading(false);
-
         } catch (error) {
-            console.error("Error stopping interview:", error);
-            setLoading(false);
+            toast('Error stopping interview');
         }
     }
 
     useEffect(() => {
         const handleMessage = (message) => {
-            // console.log('Message: ', message);
             if(message?.conversation){
                 const convoString = JSON.stringify(message.conversation);
-                // console.log('conversation string: ',convoString);
                 setConversation(convoString);
             }
         };
 
         vapi.on('message', handleMessage);
         vapi.on('call-start', () => {
-            console.log('Call has started');
             toast("Call Connected...");
         });
         vapi.on('speech-start', () => {
-            console.log("Assistant speech has started");
             setActiveUser(false);
         });
         vapi.on('speech-end', () => {
-            console.log("Assistant speech has ended");
             setActiveUser(true);
         });
         vapi.on('speech-end', () => {
-            console.log("Assistant speech has ended");
             setActiveUser(true);
         });
-        // vapi.on('call-end', ()=>{
-        //     console.log("Call has ended");
-        //     toast("Interview Ended... Please Wait...");
-        //     GenerateFeedback();
-        // });
 
 
         //  Clean up the listener
@@ -170,12 +151,10 @@ function StartInterview() {
         setLoading(true);
 
         try {
-            console.log("Generating feedback...");
             const result = await axios.post('/api/ai-feedback', {
                 conversation: conversation
             });
 
-            console.log("Feedback API result:", result?.data);
             const Content = result.data.content;
             const FINAL_CONTENT = Content.replace('```json', '').replace('```', '');
 
@@ -194,73 +173,84 @@ function StartInterview() {
                 .select();
 
             if (error) {
-                console.error("Database error:", error);
-                toast.error("Failed to save feedback to database");
+                toast.error("Failed to save feedback, Conversation is too short!");
                 setLoading(false);
                 return;
             }
             
             setLoading(false);
-            console.log("Data saved to database:", data);
             toast.success("Feedback generated successfully!");
             router.push('/interview/' + interview_Id + '/completed');
-            
         } catch (error) {
-            console.error("Error generating feedback:", error);
-            toast.error("Failed to generate feedback");
+            setLoading(false);
+            toast.error("Conversation is too short to generate feedback!");
+            router.push('/interview/' + interview_Id + '/completed');
         }
     }
 
-    return (
-        <div className=' p-20 lg:px-48 xl:px-56'>
-            <h2 className=' font-bold text-xl flex justify-between'>
-                AI Interview Session
-                <span className=' flex gap-2 items-center'>
-                    <Timer />
-                    {formatTime(secondsElapsed)}
-                </span>
-            </h2>
+  return (
+    <div className="px-4 py-10 sm:px-6 md:px-10 lg:px-20 xl:px-40 2xl:px-56">
+      <h2 className="font-bold text-lg sm:text-xl flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-2">
+        <span>AI Interview Session</span>
+        <span className="flex gap-2 items-center text-sm text-gray-600">
+          <Timer />
+          {formatTime(secondsElapsed)}
+        </span>
+      </h2>
 
-            <div className=' grid grid-cols-1 md:grid-cols-2 gap-7 mt-6'>
-                <div className=' bg-white h-[400px] rounded-lg border flex flex-col gap-3 text-gray-500 shadow-xl items-center justify-center'>
-                    <div className=' relative'>
-                        {!activeUser && <span className=' absolute inset-0 rounded-full bg-blue-500 opacity-75 animate-ping' />}
-                        <Image src={'/ai.jpg'} alt='ai' 
-                            width={100}
-                            height={100}
-                            className=' w-[60px] h-[60px] object-cover rounded-full'
-                        />
-                    </div>
-                    <h2>AI Recruiter</h2>
-                </div>
-
-                <div className=' bg-white h-[400px] rounded-lg border flex flex-col gap-3 text-gray-500 shadow-xl items-center justify-center'>
-                    <div className=' relative'>
-                        {activeUser && <span className=' absolute inset-0 rounded-full bg-blue-500 opacity-75 animate-ping' />}
-                        <h2 className=' text-2xl bg-primary text-white p-3 rounded-full px-5'>{interviewInfo?.userName?.[0]}</h2>
-                    </div>
-                    <h2>{interviewInfo?.userName}</h2>
-                </div>
-            </div>
-            
-            <div className=' flex items-center justify-center mt-10 gap-5'>
-                <Mic className=' h-12 w-12 p-3 text-white bg-gray-500 rounded-full cursor-pointer'/>
-                <InterviewEndDialog stopInterview={stopInterview}>
-                    <span>
-                        {loading ? (
-                            <Loader2Icon className='h-12 w-12 p-3 bg-red-500 text-white rounded-full animate-spin' />
-                        ) : (
-                            <Phone className='h-12 w-12 p-3 bg-red-500 text-white rounded-full cursor-pointer' />
-                        )}
-                    </span>
-                </InterviewEndDialog>
-            </div>
-
-            <h2 className=' text-gray-400 text-sm text-center mt-5'>
-                {loading ? 'Generating feedback...' : 'Interview in Progress...'}
-            </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+        {/* AI Recruiter Card */}
+        <div className="bg-white min-h-[300px] sm:h-[350px] md:h-[400px] rounded-lg border shadow-xl flex flex-col items-center justify-center gap-3 text-gray-500 p-5">
+          <div className="relative">
+            {!activeUser && (
+              <span className="absolute inset-0 rounded-full bg-blue-500 opacity-75 animate-ping" />
+            )}
+            <Image
+              src="/ai.jpg"
+              alt="ai"
+              width={100}
+              height={100}
+              className="w-14 h-14 sm:w-[60px] sm:h-[60px] object-cover rounded-full"
+            />
+          </div>
+          <h2 className="text-center text-sm sm:text-base">AI Recruiter</h2>
         </div>
-    )
+
+        {/* User Card */}
+        <div className="bg-white min-h-[300px] sm:h-[350px] md:h-[400px] rounded-lg border shadow-xl flex flex-col items-center justify-center gap-3 text-gray-500 p-5">
+          <div className="relative">
+            {activeUser && (
+              <span className="absolute inset-0 rounded-full bg-blue-500 opacity-75 animate-ping" />
+            )}
+            <h2 className="text-xl sm:text-2xl bg-primary text-white p-3 rounded-full uppercase px-5">
+              {interviewInfo?.userName?.[0]}
+            </h2>
+          </div>
+          <h2 className="text-center text-sm sm:text-base">
+            {interviewInfo?.userName}
+          </h2>
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-wrap items-center justify-center mt-10 gap-5">
+        <Mic className="h-10 w-10 sm:h-12 sm:w-12 p-3 text-white bg-gray-500 rounded-full cursor-pointer" />
+        <InterviewEndDialog stopInterview={stopInterview}>
+          <span>
+            {loading ? (
+              <Loader2Icon className="h-10 w-10 sm:h-12 sm:w-12 p-3 bg-red-500 text-white rounded-full animate-spin" />
+            ) : (
+              <Phone className="h-10 w-10 sm:h-12 sm:w-12 p-3 bg-red-500 text-white rounded-full cursor-pointer" />
+            )}
+          </span>
+        </InterviewEndDialog>
+      </div>
+
+      <h2 className="text-gray-400 text-xs sm:text-sm text-center mt-5">
+        {loading ? 'Generating feedback...' : 'Interview in Progress...'}
+      </h2>
+    </div>
+  )
 }
 
 export default StartInterview

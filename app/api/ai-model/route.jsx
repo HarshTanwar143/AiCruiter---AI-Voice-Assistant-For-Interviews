@@ -10,7 +10,6 @@ export async function POST(req){
     .replaceAll('{{duration}}', duration)
     .replaceAll('{{type}}', type);
 
-    console.log('final prompt : ', FINAL_PROMPT);
 
     try{
         const openai = new OpenAI({
@@ -25,10 +24,8 @@ export async function POST(req){
             ],
         })
 
-        // console.log('completion :: ',completion.choices[0].message);
         return NextResponse.json(completion.choices[0].message);
     }catch(e){
-        console.log(e);
         return NextResponse.json(e);
     }
 }

@@ -2,14 +2,16 @@
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import FormContainer from './_components/FormContainer';
 import QuestionList from './_components/QuestionList';
 import { toast } from 'sonner';
 import InterviewLink from './_components/InterviewLink';
+import { useUser } from '@/app/provider';
 
 function CreateInterview() {
     const router = useRouter();
+    const { user } = useUser();
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState();
     const [interviewId, setInterviewId] = useState();
@@ -17,10 +19,9 @@ function CreateInterview() {
     const onHandleInputChange = (field,value) => {
         setFormData(prev => ({...prev, [field]: value}));
     }
-    // console.log('formdata :: ',formData);
-
 
     const HandleNext = ()=>{
+
         if(!formData?.jobPosition || !formData?.jobDescription || !formData?.duration || formData?.type?.length===0){
             toast("Please enter all required details!")
             return;

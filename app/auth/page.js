@@ -5,6 +5,7 @@ import logo from "../../public/logo.png";
 import login from "../../public/login.jpg";
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/services/supabaseClient';
+import { toast } from 'sonner';
 
 const SignIn = () => {
 
@@ -13,18 +14,18 @@ const SignIn = () => {
         const {error} = await supabase.auth.signInWithOAuth({
             provider: 'google',
                 options: {
-                    redirectTo: 'http://localhost:3000/dashboard'
+                    redirectTo: 'http://localhost:3000'
                 }
         });
 
         if(error){
-            console.error('Error signing in with Google:', error.message);
+            toast('Error in signing in with Google');
         }
     }
 
 
   return (
-    <div className=' bg-[#DDE9FF] flex flex-col items-center justify-center h-screen'>
+    <div className=' bg-[#DDE9FF] flex flex-col items-center justify-center py-12 min-h-screen'>
         <Image 
             src={logo}
             height={200}

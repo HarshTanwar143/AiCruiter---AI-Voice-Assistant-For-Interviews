@@ -18,9 +18,23 @@ import { Plus } from 'lucide-react'
 import { SideBarOptions } from '@/services/Constants'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useUser } from '@/app/provider'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 export function AppSidebar() {
     const path = usePathname();
+    const router = useRouter();
+    const {user} = useUser();
+
+    const handleInterview = () => {
+        if(!user?.credits || user?.credits < 1){
+            toast.error("You don't have enough credits! Purchase our plan to create interviews.");
+            router.push('/billing');
+        }else{
+            router.push('/dashboard/create-interview');
+        }
+    }
 
     return (
         <>
@@ -29,9 +43,9 @@ export function AppSidebar() {
                     <Link href={'/'}>
                         <Image src={logo} alt='logo' width={200} height={100} className=' w-[250px]' />
                     </Link>
-                    <Link href={'/dashboard/create-interview'} className=' w-full'>
-                        <Button className=" w-full mt-5 cursor-pointer"><Plus/> Create New Interview</Button>
-                    </Link>
+                    <div className=' w-full'>
+                        <Button onClick={handleInterview} className=" w-full mt-5 cursor-pointer"><Plus/> Create New Interview</Button>
+                    </div>
                 </SidebarHeader>
                 <SidebarContent>
                     <SidebarGroup>

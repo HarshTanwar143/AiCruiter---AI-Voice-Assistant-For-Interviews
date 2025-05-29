@@ -9,6 +9,7 @@ import { supabase } from '@/services/supabaseClient'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { InterviewDataContext } from '@/context/InterviewDataContext'
+import PageLoader from '@/services/PageLoader'
 
 function Interview() {
     const params = useParams();
@@ -16,7 +17,7 @@ function Interview() {
     const {interviewInfo, setInterviewInfo} = useContext(InterviewDataContext);
     const { interview_Id } = params;
     const [interviewDetails, setInterviewDetails] = useState();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [loadingInterview, setLoadingInterview] = useState(false);
     const [userName, setUserName] = useState();
     const [userEmail, setUserEmail] = useState();
@@ -25,25 +26,25 @@ function Interview() {
         interview_Id && getInterviewDetails();
     }, [interview_Id]);
 
-    const getInterviewDetails = async () => {
-        setLoading(true);
-        try {
-            let { data: Interviews, error } = await supabase
-                .from('Interviews')
-                .select('jobPosition,jobDescription,duration,type,questionList,userEmail')
-                .eq('interviewId', interview_Id)
+const getInterviewDetails = async () => {
+    try {
+        let { data: Interviews, error } = await supabase
+            .from('Interviews')
+            .select('jobPosition,jobDescription,duration,type,questionList,userEmail')
+            .eq('interviewId', interview_Id)
 
-            setInterviewDetails(Interviews[0]);
-            setLoading(false);
-            if (Interviews?.length === 0) {
-                toast.error('Incorrect Interview Link');
-                router.push('/');
-                return;
-            }
-        } catch (e) {
-            toast.error('Error fetching interview details');
+        setInterviewDetails(Interviews[0]);
+        setLoading(false);
+        if (Interviews?.length === 0) {
+            toast.error('Incorrect Interview Link');
+            router.push('/');
+            return;
         }
+    } catch (e) {
+        toast.error('Error fetching interview details');
+        setLoading(false);
     }
+}
 
     const onJoinInterview = async () => {
         if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(userEmail)) {
@@ -57,7 +58,6 @@ function Interview() {
         .select("*")
         .eq('interviewId', interview_Id)
 
-        // console.log('Interviews:', Interviews[0]);
         setInterviewInfo({
             userName: userName,
             userEmail: userEmail,
@@ -69,13 +69,9 @@ function Interview() {
     }
 
     return (
-        <>
-            {
-                loading ?
-                    <div className='h-screen flex justify-center items-center text-xl'>
-                        <Loader2Icon className='animate-spin' />
-                    </div> :
-                    <div className='flex justify-center px-4 sm:px-6 md:px-10 lg:px-16 py-10'>
+        loading ?
+        <PageLoader load={loading} /> :
+        <div className='flex justify-center px-4 sm:px-6 md:px-10 lg:px-16 py-10'>
                         <div className='w-full max-w-3xl bg-white shadow-2xl shadow-blue-300 rounded-lg p-6 sm:p-8 md:p-10 flex flex-col items-center gap-4'>
                             <Image src='/logo.png' width={160} height={80} alt='logo' className='w-32 sm:w-48' />
                             <h2 className='font-bold text-lg sm:text-xl text-center'>AI Powered Interview Platform</h2>
@@ -117,12 +113,12 @@ function Interview() {
                                 disabled={loading || !userName || !userEmail}
                                 onClick={onJoinInterview}
                             >
-                                {loadingInterview ? <Loader2Icon className=' animate-spin' /> : <Video />} Join Interview
+                                {loadingInterview && <Loader2Icon className=' animate-spin' />} 
+                                {!loadingInterview && <Video className='h-4 w-4' />}
+                                {loadingInterview ? 'Joining...' : 'Join Interview'} 
                             </Button>
                         </div>
-                    </div>
-            }
-        </>
+        </div>
     )
 }
 

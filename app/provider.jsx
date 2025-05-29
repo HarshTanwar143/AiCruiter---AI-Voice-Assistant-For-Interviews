@@ -18,9 +18,6 @@ const Provider = ({children}) => {
             .select("*")
             .eq('email', user?.email);
 
-            // console.log("Users", Users);
-            // console.log('this is user : ',user);
-
             // If user does not exist, create a new user
             if(Users?.length == 0){
                 const {data, error} = await supabase.from('Users').insert([{
@@ -29,7 +26,6 @@ const Provider = ({children}) => {
                     picture: user?.user_metadata?.picture
                 }])
 
-                // console.log('inserted data of user : ', data);
                 useState(data);
                 return
             }

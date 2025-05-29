@@ -4,12 +4,13 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/services/supabaseClient';
 import { Plus, Video } from 'lucide-react';
 import React, { useEffect, useState } from 'react'
-import InterviewCard from './InterviewCard';
+import InterviewCard from '../dashboard/_components/InterviewCard';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import PageLoader from '@/services/PageLoader';
 
-function LatestInterviewsList() {
+
+function AllInterview() {
     const [interviewList, setInterviewList] = useState([]);
     const [loading, setLoading] = useState(true);
     const { user } = useUser();
@@ -33,17 +34,18 @@ function LatestInterviewsList() {
         .from('Interviews')
         .select('*')
         .eq('userEmail', user?.email)
-        .order('id', {ascending: false})
-        .limit(6);
+        .order('id', {ascending: false});
+
         
         setInterviewList(Interviews);
         setLoading(false);
     }
 
+
     return (
         loading ? <PageLoader load={loading} /> :
         <div className=' my-5'>
-            <h2 className=' font-bold text-2xl'>Previously Created Interviews</h2>
+            <h2 className=' font-bold text-2xl'>All Previously Created Interviews</h2>
 
             {
                 interviewList?.length==0 ?
@@ -66,4 +68,4 @@ function LatestInterviewsList() {
     )
 }
 
-export default LatestInterviewsList
+export default AllInterview

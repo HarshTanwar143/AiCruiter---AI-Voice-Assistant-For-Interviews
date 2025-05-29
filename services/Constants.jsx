@@ -51,6 +51,30 @@ export const InterviewType = [
     },
 ]
 
+export const PricingPlan = [
+    {
+        link: 'https://buy.stripe.com/test_14AeVfb7r2uaeAV8aA6sw03',
+        price: 200.00,
+        priceId: 'price_1RTjVIQ6mzsMDGrDr7GbwFAa',
+        credits: 8,
+        plan: 'Monthly Plan'
+    },
+    {
+        link: 'https://buy.stripe.com/test_00w4gB1wRgl0gJ3gH66sw04',
+        price: 700.00,
+        priceId: 'price_1RTjmoQ6mzsMDGrDuwnp9t3a',
+        credits: 35,
+        plan: '3 Months Plan'
+    },
+    {
+        link: 'https://buy.stripe.com/test_cNi28ta3n8Sy78tduU6sw02',
+        price: 2500.00,
+        priceId: 'price_1RTjOeQ6mzsMDGrDPowuWVlc',
+        credits: 100,
+        plan: 'Yearly Plan'
+    }
+]
+
 export const QUESTIONS_PROMPT = `You are an expert technical interviewer.
 Based on the following inputs, generate a well-structured list of high-quality interview questions:
 Job Title: {{jobTitle}}
@@ -67,7 +91,7 @@ Format your response in JSON format with array list of questions.
 format: interviewQuestions=[
 {
 question:",
-type: 'Technical/Behavioral/Experince/Problem Solving/Leaseship'
+type: '{{type}}'
 }, {
 ...
 }]
@@ -76,19 +100,20 @@ The goal is to create a structured, relevant, and time-optimized interview plan 
 
 export const FEEDBACK_PROMPT = `{{conversation}}
     Depends on this Interview Conversation between assitant and user, Give me feedback for user interview. Give me rating out of 10
-    for technical Skills, Communication, Problem Solving, Experience. Also give me summary in 3 lines about the interview and one line 
+    for technical Skills, Communication, Problem Solving, Experience, totalRating. Also give me summary in 3 lines about the interview and one line 
     to let me know whether is recommended for hire or not with msg. Give me response in JSON format
     {
         feedback: {
             rating: {
-                technicalSkills: 5,
-                communication: 6,
-                problemSolving: 4,
-                experience: 7
+                technicalSkills: <Rate out of 10 based on user response>,
+                communication: <Rate out of 10 based on user response>,
+                problemSolving: <Rate out of 10 based on user response>,
+                experience: <Rate out of 10 based on user response>,
+                totalRating: <Rate out of 10 based on user response without fraction>
             },
             summary:<in 3 Line>,
-            Recommendation:'',
-            RecommendationMsg: ''
+            Recommendation:<Only give Yes or No without any explanation, Yes or No shows this candidate is recommended for hire or not>,
+            RecommendationMsg: <Give a short message to let me know why this candidate is recommended or not>
         }
     }
 `

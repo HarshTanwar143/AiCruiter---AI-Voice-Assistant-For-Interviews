@@ -17,23 +17,20 @@ function QuestionList({formData, onCreateLink}) {
     const interviewId = uuidv4();
 
     useEffect(()=>{
-        console.log('inside');
         if(formData){
             GenerateQuestionList();
         }
-        console.log('outside');
     },[formData]);
 
     const GenerateQuestionList = async() => {
         setLoading(true);
         try{
-            console.log('before result');
             const result = await axios.post('/api/ai-model',{
                 ...formData
             });
             const Content = result.data.content;
             const FINAL_CONTENT = Content.replace('```json','').replace('```','');
-            console.log('final content : ', FINAL_CONTENT);
+
             setQuestionList(JSON.parse(FINAL_CONTENT)?.interviewQuestions);
             setLoading(false);
         }catch(e){
@@ -56,7 +53,13 @@ function QuestionList({formData, onCreateLink}) {
         ])
         .select()
 
-        console.log('data : ', data);
+        // Update User's Credits
+        const userUpdate = await supabase
+        .from('Users')
+        .update({ credits: Number(user?.credits) - 1 })
+        .eq('email', user?.email)
+        .select()
+        
         setSaveLoading(false);
         onCreateLink(interviewId);
     }
