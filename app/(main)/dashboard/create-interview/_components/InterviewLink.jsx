@@ -41,9 +41,8 @@ function InterviewLink({interview_Id, formData}) {
                 <hr className=' my-5' />
 
                 <div className=' flex gap-5 flex-col sm:flex-row items-center'>
-                    <h2 className=' flex gap-2 text-sm text-gray-500 items-center'><Clock className=' h-4 w-4' /> 30 Min{formData?.duration}</h2>
-                    <h2 className=' flex gap-2 text-sm text-gray-500 items-center'><List className=' h-4 w-4' /> 10 Questions{formData?.duration}</h2>
-                    {/* <h2 className=' flex gap-2 text-sm text-gray-500 items-center'><Clock className=' h-4 w-4' /> 30 Min{formData?.duration}</h2> */}
+                    <h2 className=' flex gap-2 text-sm text-gray-500 items-center'><Clock className=' h-4 w-4' />{formData?.duration}</h2>
+                    <h2 className=' flex gap-2 text-sm text-gray-500 items-center'><List className=' h-4 w-4' />10 Questions</h2>
                 </div>
             </div>
 
