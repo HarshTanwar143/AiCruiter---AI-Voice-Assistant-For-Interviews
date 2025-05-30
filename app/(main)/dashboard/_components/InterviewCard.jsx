@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 
 function InterviewCard({interview, viewDetail=false}) {
     const CopyLink = () => {
-        const url = process.env.NEXT_PUBLIC_HOST_URL+ "/" + interview?.interviewId;
+        const url = process.env.NEXT_PUBLIC_HOST_URL+ "/interview/" + interview?.interviewId;
         navigator.clipboard.writeText(url);
         toast("Link Copied!");
     }
