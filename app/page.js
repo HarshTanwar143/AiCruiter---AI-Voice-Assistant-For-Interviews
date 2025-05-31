@@ -21,6 +21,10 @@ export default function Home() {
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user || null);
+    if (session) {
+      // Store in cookie
+      document.cookie = `userSession=${JSON.stringify(session?.provider_token)}; path=/`;
+    }
       setLoading(false);
     };
 
@@ -66,6 +70,7 @@ export default function Home() {
   const signOut = async () => {
     await supabase.auth.signOut();
     setIsMobileMenuOpen(false); // Close menu on sign out
+    document.cookie = "userSession=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
   };
 
   const goToDashboard = () => {

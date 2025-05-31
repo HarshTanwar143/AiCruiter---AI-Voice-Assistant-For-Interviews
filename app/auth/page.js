@@ -18,6 +18,7 @@ const SignIn = () => {
                 }
         });
 
+
         if(error){
             toast('Error in signing in with Google');
         }

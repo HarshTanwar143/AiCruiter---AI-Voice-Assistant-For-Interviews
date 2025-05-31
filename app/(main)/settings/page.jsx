@@ -50,6 +50,7 @@ function UserSetting() {
         setIsLoggingOut(true);
         try {
             await supabase.auth.signOut();
+            document.cookie = "userSession=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
             router.push('/');
         } catch (error) {
             setIsLoggingOut(false);
