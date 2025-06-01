@@ -26,7 +26,7 @@ const SignIn = () => {
 
 
   return (
-    <div className=' bg-[#DDE9FF] flex flex-col items-center justify-center py-12 min-h-screen'>
+    <div className=' bg-[#DDE9FF] flex flex-col items-center justify-center min-h-screen'>
         <Image 
             src={logo}
             height={200}

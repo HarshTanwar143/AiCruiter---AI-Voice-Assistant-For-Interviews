@@ -8,11 +8,11 @@ import { toast } from 'sonner';
 
 function InterviewLink({interview_Id, formData}) {
     const url = process.env.NEXT_PUBLIC_HOST_URL + '/' + interview_Id;
-
+    
     const GetInterviewUrl = () => {
         return url;
     }
-
+    
     const onCopyLink = async() => {
         await navigator.clipboard.writeText(url);
         toast('Link Copied to Clipboard!');
@@ -47,8 +47,8 @@ function InterviewLink({interview_Id, formData}) {
             </div>
 
             <div className=' mt-7 p-5 rounded-lg bg-white shadow-md w-full'>
-                <h2 className=' font-bold'>Share Via</h2>
-                <div className=' flex gap-7 mt-2'>
+                <h2 className=' font-bold text-center sm:text-left mb-5'>Share Via</h2>
+                <div className=' flex flex-col sm:flex-row gap-7 mt-2'>
                     <Button className='cursor-pointer' variant={'outline'} onClick={() => window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=&su=Interview Invitation&body=Hi, please join the interview using this link: ${url}`, '_blank')}>
                         <Mail /> Email
                     </Button>
@@ -61,7 +61,7 @@ function InterviewLink({interview_Id, formData}) {
                 </div>
             </div>
 
-            <div className=' flex w-full gap-5 justify-between mt-6'>
+            <div className=' flex flex-col sm:flex-row w-full gap-5 items-center justify-between mt-6'>
                 <Link href={'/dashboard'}>
                     <Button className=' cursor-pointer' variant={'outline'}><ArrowLeft /> Back to Dashboard</Button>
                 </Link>
